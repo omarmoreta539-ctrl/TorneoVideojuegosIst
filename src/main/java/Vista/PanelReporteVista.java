@@ -47,7 +47,7 @@ public class PanelReporteVista extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Juegos", "Fecha  Inicio", "Fecha Fin"
             }
         ));
         jScrollPane1.setViewportView(tablaTorneos);

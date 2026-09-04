@@ -27,9 +27,10 @@ public class Patrocinador extends EntidadTorneo {
         return "Patrocinador: " + nombre + " (" + empresa + ")";
     }
 @Override
-public String toString() {
-    return this.nombre; // O el campo que uses en tu base de datos para el nombre del patrocinador
-}
+    public String toString() {
+        // Esto concatena el nombre del dueño y la empresa para que se muestren juntos en el ComboBox
+        return this.nombre + " (" + this.empresa + ")";
+    }
 
     public ArrayList<Patrocinador> obtenerPatrocinadores() {
         ArrayList<Patrocinador> lista = new ArrayList<>();

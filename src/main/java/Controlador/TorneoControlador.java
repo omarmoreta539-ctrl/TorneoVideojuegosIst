@@ -8,6 +8,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class TorneoControlador implements ActionListener {
@@ -29,7 +32,6 @@ public class TorneoControlador implements ActionListener {
         this.modeloTorneo = new Torneo();
         this.modeloPatrocinador = new Patrocinador();
 
-        // 1. Enlazar eventos de la Pestaña 1
         if (this.panel1.getBtnGuardarTorneo() != null) {
             this.panel1.getBtnGuardarTorneo().addActionListener(this);
         }
@@ -37,7 +39,7 @@ public class TorneoControlador implements ActionListener {
             this.panel1.getBtnVolverMenu().addActionListener(this);
         }
 
-        // 2. Enlazar eventos de la Pestaña 2 (¡Aquí estaba faltando el escuchador clave!)
+
         if (this.panel2.getBtnAsignarPatrocinador() != null) {
             this.panel2.getBtnAsignarPatrocinador().addActionListener(this);
         }
@@ -45,7 +47,7 @@ public class TorneoControlador implements ActionListener {
             this.panel2.getBtnAtras().addActionListener(this);
         }
 
-        // 3. Enlazar eventos de la Pestaña 3 (Reporte General)
+   
         if (this.panel3.getBtnFinalizar() != null) {
             this.panel3.getBtnFinalizar().addActionListener(this);
         }
@@ -57,7 +59,6 @@ public class TorneoControlador implements ActionListener {
             this.vista.getBtnVolverMenu().addActionListener(this);
         }
 
-        // Estado inicial de la barra de progreso y bloqueo de pestañas futuras
         if (this.vista.getPbProceso() != null) {
             this.vista.getPbProceso().setValue(0);
         }
@@ -72,7 +73,7 @@ public class TorneoControlador implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // --- ACCIONES PESTAÑA 1 ---
+ 
         if (panel1.getBtnGuardarTorneo() != null && e.getSource() == panel1.getBtnGuardarTorneo()) {
             guardarTorneo();
         } 
@@ -81,7 +82,7 @@ public class TorneoControlador implements ActionListener {
             volverAlMenuPrincipal();
         }
 
-        // --- ACCIONES PESTAÑA 2 ---
+
         else if (panel2.getBtnAsignarPatrocinador() != null && e.getSource() == panel2.getBtnAsignarPatrocinador()) {
             asignarPatrocinador();
         } 
@@ -89,7 +90,6 @@ public class TorneoControlador implements ActionListener {
             regresarTab(0, 0);
         }
 
-        // --- ACCIONES PESTAÑA 3 ---
         else if (panel3.getBtnFinalizar() != null && e.getSource() == panel3.getBtnFinalizar()) {
             finalizarProceso();
         } 
@@ -100,12 +100,45 @@ public class TorneoControlador implements ActionListener {
 
     private void guardarTorneo() {
         try {
-            String nombre = panel1.getTxtNombre().getText();
-            String inicio = panel1.getTxtFechaInicio().getText();
-            String fin = panel1.getTxtFechaFin().getText();
-            double premio = Double.parseDouble(panel1.getTxtPremio().getText());
+            String nombre = panel1.getTxtNombre().getText().trim();
+            String inicioStr = panel1.getTxtFechaInicio().getText().trim();
+            String finStr = panel1.getTxtFechaFin().getText().trim();
+            String premioStr = panel1.getTxtPremio().getText().trim();
+            
+            if (nombre.isEmpty() || inicioStr.isEmpty() || finStr.isEmpty() || premioStr.isEmpty()) {
+                JOptionPane.showMessageDialog(vista, "Por favor complete todos los campos.", "Validación", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            Torneo t = new Torneo(0, nombre, inicio, fin, premio);
+       
+            double premio = Double.parseDouble(premioStr);
+            if (premio <= 0) {
+                JOptionPane.showMessageDialog(vista, "El premio debe ser un valor mayor a cero.", "Error de Validación", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate fechaInicio = LocalDate.parse(inicioStr, formatter);
+                LocalDate fechaFin = LocalDate.parse(finStr, formatter);
+
+             
+                if (fechaInicio.getYear() < 2025) {
+                    JOptionPane.showMessageDialog(vista, "No se permiten fechas antiguas (mínimo año 2025).", "Error de Validación", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                if (fechaFin.isBefore(fechaInicio)) {
+                    JOptionPane.showMessageDialog(vista, "La fecha fin no puede ser anterior a la fecha de inicio.", "Error de Validación", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            } catch (DateTimeParseException ex) {
+                JOptionPane.showMessageDialog(vista, "Formato de fecha inválido o fecha no existente (Use AAAA-MM-DD).", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Torneo t = new Torneo(0, nombre, inicioStr, finStr, premio);
             if (t.insertarTorneoSp() > 0) {
                 JOptionPane.showMessageDialog(vista, "Torneo registrado exitosamente.");
                 
@@ -114,8 +147,8 @@ public class TorneoControlador implements ActionListener {
                 }
                 
                 if (vista.getTabPrincipal() != null) {
-                    vista.getTabPrincipal().setEnabledAt(1, true); // Habilita Pestaña 2
-                    vista.getTabPrincipal().setSelectedIndex(1);   // Salta a Pestaña 2
+                    vista.getTabPrincipal().setEnabledAt(1, true); 
+                    vista.getTabPrincipal().setSelectedIndex(1);   
                 }
                 
                 cargarCombos();
@@ -151,12 +184,12 @@ public class TorneoControlador implements ActionListener {
             JOptionPane.showMessageDialog(vista, "Patrocinio asignado correctamente.");
             
             if (vista.getPbProceso() != null) {
-                vista.getPbProceso().setValue(66); // Progreso al 66%
+                vista.getPbProceso().setValue(66); 
             }
 
             if (vista.getTabPrincipal() != null) {
-                vista.getTabPrincipal().setEnabledAt(2, true); // Habilita Pestaña 3 (Reporte)
-                vista.getTabPrincipal().setSelectedIndex(2);   // Salta a Pestaña 3
+                vista.getTabPrincipal().setEnabledAt(2, true); 
+                vista.getTabPrincipal().setSelectedIndex(2);   
             }
 
             cargarTablaReporte();
@@ -198,21 +231,21 @@ public class TorneoControlador implements ActionListener {
         }
     }
 
-    private void finalizarProceso() {
+  private void finalizarProceso() {
         if (vista.getPbProceso() != null) {
             vista.getPbProceso().setValue(100);
         }
         
         JOptionPane.showMessageDialog(vista, "¡Proceso Completado al 100%! Se restablecerán los formularios.");
 
-        // Limpiar campos
+      
         panel1.getTxtNombre().setText("");
         panel1.getTxtFechaInicio().setText("");
         panel1.getTxtFechaFin().setText("");
         panel1.getTxtPremio().setText("");
         panel2.getTxtMontoPatrocinio().setText("");
 
-        // Resetear pestañas y barra al estado inicial
+    
         if (vista.getTabPrincipal() != null) {
             vista.getTabPrincipal().setEnabledAt(1, false);
             vista.getTabPrincipal().setEnabledAt(2, false);

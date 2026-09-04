@@ -52,7 +52,7 @@ public class EstadisticasVista extends javax.swing.JFrame {
 
         jLabel1.setText("Fecha Inicio");
 
-        jLabel2.setText("Tipo Paciente");
+        jLabel2.setText("Fase");
 
         jLabel3.setText("Fecha Fin");
 

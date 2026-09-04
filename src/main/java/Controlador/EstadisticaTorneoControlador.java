@@ -7,6 +7,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +50,14 @@ public class EstadisticaTorneoControlador implements ActionListener {
             vista.getTxtFechaFin().setText("");
             vista.getPanelGrafico().removeAll();
             vista.getPanelGrafico().repaint();
+            try {
+                java.lang.reflect.Method mTab = vista.getClass().getMethod("getTablaEstadisticas");
+                JTable tab = (JTable) mTab.invoke(vista);
+                if (tab != null) {
+                    ((DefaultTableModel) tab.getModel()).setRowCount(0);
+                }
+            } catch (Exception ignored) {}
+            
             graficoActual = null;
         } else if (e.getSource() == vista.getBtnVolver()) {
             vista.dispose();
@@ -58,14 +67,37 @@ public class EstadisticaTorneoControlador implements ActionListener {
     private void generarGraficaEstadistica() {
         String fInicio = vista.getTxtFechaInicio().getText().trim();
         String fFin = vista.getTxtFechaFin().getText().trim();
-        String filtroRonda = vista.getCmbTipoPaciente().getSelectedItem().toString();
+        String filtroSeleccionado = vista.getCmbTipoPaciente().getSelectedItem().toString();
 
         if (fInicio.isEmpty() || fFin.isEmpty()) {
             JOptionPane.showMessageDialog(vista, "Ingrese la fecha de inicio y fin.", "Validación", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Traducción correcta del ComboBox a los códigos numéricos de la base de datos
+        String filtroRonda = "Todos";
+        if (filtroSeleccionado.toLowerCase().contains("grupo") || filtroSeleccionado.equals("5")) {
+            filtroRonda = "5";
+        } else if (filtroSeleccionado.toLowerCase().contains("playoff") || filtroSeleccionado.equals("4")) {
+            filtroRonda = "4";
+        } else if (filtroSeleccionado.toLowerCase().contains("final") || filtroSeleccionado.equals("2")) {
+            filtroRonda = "2";
+        }
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        
+        DefaultTableModel modeloTabla = null;
+        try {
+            java.lang.reflect.Method mTab = vista.getClass().getMethod("getTablaEstadisticas");
+            JTable tab = (JTable) mTab.invoke(vista);
+            if (tab != null) {
+                modeloTabla = new DefaultTableModel();
+                modeloTabla.addColumn("Fase del Torneo");
+                modeloTabla.addColumn("Cantidad de Partidos");
+                tab.setModel(modeloTabla);
+            }
+        } catch (Exception ignored) {}
+
         ConexionBDD con = new ConexionBDD();
         
         String sql = "SELECT ronda, COUNT(*) AS total FROM partidos WHERE fecha BETWEEN ? AND ?";
@@ -73,6 +105,8 @@ public class EstadisticaTorneoControlador implements ActionListener {
             sql += " AND ronda = ?";
         }
         sql += " GROUP BY ronda";
+
+        boolean hayDatos = false;
 
         try (Connection cn = con.conectar();
              PreparedStatement ps = cn.prepareStatement(sql)) {
@@ -85,15 +119,41 @@ public class EstadisticaTorneoControlador implements ActionListener {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    String ronda = rs.getString("ronda");
+                    hayDatos = true;
+                    String rondaBruta = rs.getString("ronda");
                     int total = rs.getInt("total");
-                    dataset.addValue(total, "Partidos Programados", ronda);
+                    
+                    // Mapeo dinámico para transformar los números en nombres descriptivos de fases
+                    String nombreFase = "";
+                    if (rondaBruta.equals("5") || rondaBruta.equalsIgnoreCase("Fase de Grupos")) {
+                        nombreFase = "Fase de Grupos";
+                    } else if (rondaBruta.equals("4") || rondaBruta.equalsIgnoreCase("Playoff")) {
+                        nombreFase = "Playoff";
+                    } else if (rondaBruta.equals("2") || rondaBruta.equalsIgnoreCase("Final")) {
+                        nombreFase = "Final";
+                    } else {
+                        nombreFase = "Fase " + rondaBruta;
+                    }
+                    
+                    dataset.addValue(total, "Partidos Programados", nombreFase);
+                    
+                    if (modeloTabla != null) {
+                        modeloTabla.addRow(new Object[]{nombreFase, total});
+                    }
                 }
             }
 
+            if (!hayDatos) {
+                JOptionPane.showMessageDialog(vista, "No hay estadísticas en estas fechas, vuelve a ingresar.", "Sin resultados", JOptionPane.WARNING_MESSAGE);
+                vista.getPanelGrafico().removeAll();
+                vista.getPanelGrafico().repaint();
+                graficoActual = null;
+                return;
+            }
+
             graficoActual = ChartFactory.createBarChart(
-                "Estadística de Partidos por Ronda",
-                "Rondas del Torneo",
+                "Estadística de Partidos por Fase",
+                "Fases del Torneo",
                 "Cantidad de Partidos",
                 dataset
             );
