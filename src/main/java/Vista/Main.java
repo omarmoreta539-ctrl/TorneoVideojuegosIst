@@ -2,6 +2,7 @@ package Vista;
 
 import Controlador.ConexionBDD;
 import Controlador.EquipoControlador;
+import Controlador.InscripcionControlador;
 import Controlador.JugadorControlador;
 import Controlador.UsuarioControlador;
 import Modelo.Usuario;
@@ -25,8 +26,13 @@ public class Main {
 //ctrlEq.iniciar();
 
 
-JugadorVista vistaJg = new JugadorVista();
-JugadorControlador ctrlJg = new JugadorControlador(vistaJg);
-ctrlJg.iniciar();
+//JugadorVista vistaJg = new JugadorVista();
+//JugadorControlador ctrlJg = new JugadorControlador(vistaJg);
+//ctrlJg.iniciar();
+
+
+InscripcionVista vistaIns = new InscripcionVista();
+InscripcionControlador ctrlIns = new InscripcionControlador(vistaIns);
+ctrlIns.iniciar();
     }
 }
