@@ -4,21 +4,46 @@
  */
 package Vista;
 
+import static com.mysql.cj.conf.PropertyKey.logger;
+import javax.swing.JButton;
+import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
+
 /**
  *
  * @author AMARU
  */
 public class TorneoVista extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TorneoVista.class.getName());
-
-    /**
-     * Creates new form TorneoVista
+/**
+     * Constructor por defecto (Repara el error del método main)
      */
     public TorneoVista() {
-        initComponents();
+        this(new PanelTorneoVista(), new PanelPatrocinioVista(), new PanelReporteVista());
     }
 
+    /**
+     * Constructor MVC Maestro-Detalle
+     */
+   public TorneoVista(PanelTorneoVista panel1, PanelPatrocinioVista panel2, PanelReporteVista panel3) {
+        initComponents();
+        
+        this.setTitle("Módulo de Gestión de Torneos y Patrocinios");
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        
+        tabPrincipal.removeAll();
+        
+        // Extraemos el contenido interno de cada JFrame para colocarlo en las pestañas
+        tabPrincipal.addTab("1. Crear Torneo", panel1.getContentPane());
+        tabPrincipal.addTab("2. Asignar Patrocinador", panel2.getContentPane());
+        tabPrincipal.addTab("3. Reporte General", panel3.getContentPane());
+        
+        // Bloquear Pestaña 2 y 3 al inicio
+        tabPrincipal.setEnabledAt(1, false);
+        tabPrincipal.setEnabledAt(2, false);
+        
+        this.revalidate();
+        this.repaint();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,22 +53,100 @@ public class TorneoVista extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tabPrincipal = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        btnVolverMenu = new javax.swing.JButton();
+        pbProceso = new javax.swing.JProgressBar();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 466, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 245, Short.MAX_VALUE)
+        );
+
+        tabPrincipal.addTab("tab1", jPanel1);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 466, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 245, Short.MAX_VALUE)
+        );
+
+        tabPrincipal.addTab("tab2", jPanel2);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 466, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 245, Short.MAX_VALUE)
+        );
+
+        tabPrincipal.addTab("tab3", jPanel3);
+
+        btnVolverMenu.setText("Volver al Menu");
+
+        pbProceso.setStringPainted(true);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tabPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(42, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addComponent(btnVolverMenu)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pbProceso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(tabPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnVolverMenu)
+                    .addComponent(pbProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public JButton getBtnVolverMenu() {
+        return btnVolverMenu;
+    }
+
+    public JProgressBar getPbProceso() {
+        return pbProceso;
+    }
+
+    public JTabbedPane getTabPrincipal() {
+        return tabPrincipal;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -61,7 +164,7 @@ public class TorneoVista extends javax.swing.JFrame {
                 }
             }
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+           ex.printStackTrace();
         }
         //</editor-fold>
 
@@ -70,5 +173,11 @@ public class TorneoVista extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVolverMenu;
+    public javax.swing.JPanel jPanel1;
+    public javax.swing.JPanel jPanel2;
+    public javax.swing.JPanel jPanel3;
+    private javax.swing.JProgressBar pbProceso;
+    private javax.swing.JTabbedPane tabPrincipal;
     // End of variables declaration//GEN-END:variables
 }

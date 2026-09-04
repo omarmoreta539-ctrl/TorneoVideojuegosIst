@@ -4,6 +4,8 @@
  */
 package Vista;
 
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,7 +29,7 @@ public class EquipoVista extends javax.swing.JFrame {
                 return false; // Hacer las celdas no editables
             }
         };
-        tblEquipos.setModel(modelo);
+        tablaEquipos.setModel(modelo);
 
     }
 
@@ -49,7 +51,7 @@ public class EquipoVista extends javax.swing.JFrame {
         txtPais = new javax.swing.JTextField();
         txtFecha = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblEquipos = new javax.swing.JTable();
+        tablaEquipos = new javax.swing.JTable();
         btnGuardar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -67,7 +69,7 @@ public class EquipoVista extends javax.swing.JFrame {
 
         jLabel4.setText("Pais");
 
-        tblEquipos.setModel(new javax.swing.table.DefaultTableModel(
+        tablaEquipos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -78,7 +80,7 @@ public class EquipoVista extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblEquipos);
+        jScrollPane1.setViewportView(tablaEquipos);
 
         btnGuardar.setText("Guardar");
 
@@ -180,8 +182,16 @@ public DefaultTableModel getModelo() {
         return modelo;
     }
 
+    public JScrollPane getjScrollPane1() {
+        return jScrollPane1;
+    }
+
+    public JTable getTablaEquipos() {
+        return tablaEquipos;
+    }
+
     public javax.swing.JTable getTblEquipos() {
-        return tblEquipos;
+        return tablaEquipos;
     }
 
     public javax.swing.JTextField getTxtCodigo() {
@@ -273,7 +283,7 @@ public DefaultTableModel getModelo() {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblEquipos;
+    private javax.swing.JTable tablaEquipos;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtFecha;
     private javax.swing.JTextField txtNombre;

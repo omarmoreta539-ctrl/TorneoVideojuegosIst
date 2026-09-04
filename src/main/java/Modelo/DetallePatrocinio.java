@@ -1,13 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Modelo;
 
-/**
- *
- * @author AMARU
- */
 public class DetallePatrocinio {
-    
+    private Patrocinador patrocinador;
+    private double montoAportado;
+
+    public DetallePatrocinio(Patrocinador patrocinador, double montoAportado) {
+        this.patrocinador = patrocinador;
+        this.montoAportado = montoAportado;
+    }
+
+    public Patrocinador getPatrocinador() { return patrocinador; }
+    public double getMontoAportado() { return montoAportado; }
 }

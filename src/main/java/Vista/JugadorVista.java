@@ -28,7 +28,6 @@ public class JugadorVista extends javax.swing.JFrame {
             }
         };
         tblJugadores.setModel(modelo);
-        // Ocultar la columna ID Equipo (índice 6) para mantener limpia la interfaz
         tblJugadores.getColumnModel().getColumn(6).setMinWidth(0);
         tblJugadores.getColumnModel().getColumn(6).setMaxWidth(0);
         tblJugadores.getColumnModel().getColumn(6).setWidth(0);

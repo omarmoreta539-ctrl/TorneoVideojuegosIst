@@ -44,7 +44,7 @@ public class InscripcionControlador {
         ConexionBDD conectar = new ConexionBDD();
         Connection cn = conectar.conectar();
 
-        // 1. Cargar Torneos
+        // Cargar Torneos
         vista.getCmbTorneos().removeAllItems();
         listaTorneos.clear();
         try (PreparedStatement ps = cn.prepareStatement("SELECT id_torneo, nombre FROM torneos");
@@ -57,7 +57,6 @@ public class InscripcionControlador {
             JOptionPane.showMessageDialog(vista, "Error al cargar torneos: " + e.getMessage());
         }
 
-        // 2. Cargar Equipos (Corregido para tu estructura real de BDD)
         vista.getCmbEquipos().removeAllItems();
         listaEquipos.clear();
         try (PreparedStatement ps = cn.prepareStatement("SELECT id_equipo, nombre FROM equipos");
@@ -70,7 +69,6 @@ public class InscripcionControlador {
             JOptionPane.showMessageDialog(vista, "Error al cargar equipos: " + e.getMessage());
         }
 
-        // 3. Cargar Sedes (Catálogo de sedes)
         vista.getCmbSedes().removeAllItems();
         listaSedes.clear();
         try (PreparedStatement ps = cn.prepareStatement("SELECT id_sede, nombre_sede, ciudad FROM sedes");
