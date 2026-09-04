@@ -1,54 +1,44 @@
-package controlador;
+package Controlador;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import modelo.Administrador;
-import modelo.Arbitro;
-import modelo.DirectorTecnico;
-import modelo.Usuario;
-
+import Modelo.Usuario;
+import Vista.LoginVista;
+import javax.swing.JOptionPane;
 public class UsuarioControlador {
 
-    private ConexionBDD conexionBDD;
+    private LoginVista vista;
+    private Usuario modeloUsuario;
 
-    public UsuarioControlador() {
-        this.conexionBDD = new ConexionBDD();
+    public UsuarioControlador(LoginVista vista, Usuario modeloUsuario) {
+        this.vista = vista;
+        this.modeloUsuario = modeloUsuario;
     }
 
-    // Método que realiza la autenticación contra la BDD
-    public Usuario autenticarUsuario(String username, String password) {
-        String sql = "SELECT id_usuario, username, nombre, apellido, password, rol FROM usuarios WHERE username = ? AND password = ?";
-        
-        try (Connection con = conexionBDD.conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            
-            ps.setString(1, username);
-            ps.setString(2, password);
+    public void iniciar() {
+        this.vista.getBtnIngresar().addActionListener(e -> validarIngreso());
+        this.vista.setLocationRelativeTo(null);
+        this.vista.setVisible(true);
+    }
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    int id = rs.getInt("id_usuario");
-                    String user = rs.getString("username");
-                    String nom = rs.getString("nombre");
-                    String ape = rs.getString("apellido");
-                    String pass = rs.getString("password");
-                    String rol = rs.getString("rol");
+    private void validarIngreso() {
+        String user = vista.getTxtUsuario().getText().trim();
+String pass = vista.getTxtPassword().getText().trim();
 
-                    
-                    if (rol.equalsIgnoreCase("ADMIN")) {
-                        return new Administrador(id, user, nom, ape, pass);
-                    } else if (rol.equalsIgnoreCase("DT")) {
-                        return new DirectorTecnico(id, user, nom, ape, pass);
-                    } else if (rol.equalsIgnoreCase("ARBITRO")) {
-                        return new Arbitro(id, user, nom, ape, pass, "Ecuador");
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error en autenticación: " + e.getMessage());
+        if (user.isEmpty() || pass.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Por favor complete todos los campos.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        return null; 
+
+        modeloUsuario.setUsuario(user);
+        modeloUsuario.setClave(pass);
+
+        int respuestaSp = modeloUsuario.comprobarCredencialesSp();
+
+        if (respuestaSp == 1) {
+            JOptionPane.showMessageDialog(vista, "¡Bienvenido al Sistema!", "Acceso Concedido", JOptionPane.INFORMATION_MESSAGE);
+            vista.dispose();
+           
+        } else {
+            JOptionPane.showMessageDialog(vista, "Usuario o contraseña incorrectos.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

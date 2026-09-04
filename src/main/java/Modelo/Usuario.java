@@ -1,83 +1,60 @@
-package modelo;
+package Modelo;
 
-public abstract class Usuario {
+import Controlador.ConexionBDD;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+import javax.swing.JOptionPane;
 
-    private int idUsuario;
-    private String username;
-    private String nombre;
-    private String apellido;
-    private String password;
-    private String rol;
+public class Usuario {
+
+    private String usuario;
+    private String clave;
+
+    ConexionBDD conectar = new ConexionBDD();
+    Connection conectado = conectar.conectar();
 
     public Usuario() {
     }
 
-    public Usuario(String username, String nombre, String apellido, String password, String rol) {
-        this.username = username;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.password = password;
-        this.rol = rol;
+    public Usuario(String usuario, String clave) {
+        this.usuario = usuario;
+        this.clave = clave;
     }
 
-    public Usuario(int idUsuario, String username, String nombre, String apellido, String password, String rol) {
-        this.idUsuario = idUsuario;
-        this.username = username;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.password = password;
-        this.rol = rol;
+    public String getUsuario() {
+        return usuario;
     }
 
-    // Getters y Setters
-    public int getIdUsuario() {
-        return idUsuario;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public String getClave() {
+        return clave;
     }
 
-    public String getUsername() {
-        return username;
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+ 
+    public int comprobarCredencialesSp() {
+        int resultado = 0;
+        String sql = "{CALL sp_validar_login(?, ?, ?)}";
 
-    public String getNombre() {
-        return nombre;
-    }
+        try (CallableStatement cs = conectado.prepareCall(sql)) {
+            cs.setString(1, getUsuario());
+            cs.setString(2, getClave());
+            cs.registerOutParameter(3, Types.INTEGER);
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+            cs.execute();
+            resultado = cs.getInt(3);
 
-    public String getApellido() {
-        return apellido;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error en el servidor BDD: " + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+        }
+        return resultado;
     }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    // Método Abstracto
-    public abstract String obtenerPermisosAcceso();
 }
