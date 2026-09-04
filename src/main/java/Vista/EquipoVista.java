@@ -11,9 +11,10 @@ import javax.swing.table.DefaultTableModel;
  * @author AMARU
  */
 public class EquipoVista extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EquipoVista.class.getName());
     private DefaultTableModel modelo;
+
     /**
      * Creates new form EquipoVista
      */
@@ -27,7 +28,7 @@ public class EquipoVista extends javax.swing.JFrame {
             }
         };
         tblEquipos.setModel(modelo);
-    
+
     }
 
     /**
@@ -175,27 +176,65 @@ public class EquipoVista extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-public DefaultTableModel getModelo() { return modelo; }
-    public javax.swing.JTable getTblEquipos() { return tblEquipos; }
+public DefaultTableModel getModelo() {
+        return modelo;
+    }
 
+    public javax.swing.JTable getTblEquipos() {
+        return tblEquipos;
+    }
 
-    public javax.swing.JTextField getTxtCodigo() { return txtCodigo; }
-    public javax.swing.JTextField getTxtNombre() { return txtNombre; }
-    public javax.swing.JTextField getTxtPais() { return txtPais; }
-    public javax.swing.JTextField getTxtFecha() { return txtFecha; }
+    public javax.swing.JTextField getTxtCodigo() {
+        return txtCodigo;
+    }
 
+    public javax.swing.JTextField getTxtNombre() {
+        return txtNombre;
+    }
 
-    public void setTxtCodigo(String text) { txtCodigo.setText(text); }
-    public void setTxtNombre(String text) { txtNombre.setText(text); }
-    public void setTxtPais(String text) { txtPais.setText(text); }
-    public void setTxtFecha(String text) { txtFecha.setText(text); }
+    public javax.swing.JTextField getTxtPais() {
+        return txtPais;
+    }
 
-   
-    public javax.swing.JButton getBtnGuardar() { return btnGuardar; }
-    public javax.swing.JButton getBtnActualizar() { return btnActualizar; }
-    public javax.swing.JButton getBtnEliminar() { return btnEliminar; }
-    public javax.swing.JButton getBtnLimpiar() { return btnLimpiar; }
-    public javax.swing.JButton getBtnVolverMenu() { return btnVolverMenu; }
+    public javax.swing.JTextField getTxtFecha() {
+        return txtFecha;
+    }
+
+    public void setTxtCodigo(String text) {
+        txtCodigo.setText(text);
+    }
+
+    public void setTxtNombre(String text) {
+        txtNombre.setText(text);
+    }
+
+    public void setTxtPais(String text) {
+        txtPais.setText(text);
+    }
+
+    public void setTxtFecha(String text) {
+        txtFecha.setText(text);
+    }
+
+    public javax.swing.JButton getBtnGuardar() {
+        return btnGuardar;
+    }
+
+    public javax.swing.JButton getBtnActualizar() {
+        return btnActualizar;
+    }
+
+    public javax.swing.JButton getBtnEliminar() {
+        return btnEliminar;
+    }
+
+    public javax.swing.JButton getBtnLimpiar() {
+        return btnLimpiar;
+    }
+
+    public javax.swing.JButton getBtnVolverMenu() {
+        return btnVolverMenu;
+    }
 
     /**
      * @param args the command line arguments

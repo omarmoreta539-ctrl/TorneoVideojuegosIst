@@ -42,3 +42,4 @@ String pass = vista.getTxtPassword().getText().trim();
         }
     }
 }
+////santiago omar

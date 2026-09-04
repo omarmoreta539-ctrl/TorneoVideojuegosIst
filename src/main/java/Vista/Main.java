@@ -12,7 +12,8 @@ public class Main {
         
         ConexionBDD prueba = new ConexionBDD();
         prueba.conectar();
-        
+        //////
+        ///
 //LoginVista vistaLogin = new LoginVista();
 //        Usuario modeloUsuario = new Usuario();
 //

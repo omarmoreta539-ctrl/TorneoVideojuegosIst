@@ -40,14 +40,14 @@ public class JugadorControlador {
         Equipo eq = new Equipo();
         listaEquipos = eq.obtenerEquipos();
         for (String[] fila : listaEquipos) {
-            vista.getCmbEquipos().addItem(fila[2]); 
+            vista.getCmbEquipos().addItem(fila[2]);
         }
     }
 
     private int obtenerIdEquipoSeleccionado() {
         int index = vista.getCmbEquipos().getSelectedIndex();
         if (index >= 0 && index < listaEquipos.size()) {
-            return Integer.parseInt(listaEquipos.get(index)[0]); 
+            return Integer.parseInt(listaEquipos.get(index)[0]);
         }
         return -1;
     }
@@ -115,10 +115,10 @@ public class JugadorControlador {
         }
 
         int confirmacion = JOptionPane.showConfirmDialog(
-            vista, 
-            "¿Desea eliminar a este jugador?", 
-            "Confirmar", 
-            JOptionPane.YES_NO_OPTION
+                vista,
+                "¿Desea eliminar a este jugador?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
         );
 
         if (confirmacion == JOptionPane.YES_OPTION) {
@@ -140,7 +140,6 @@ public class JugadorControlador {
             vista.setTxtFechaNacimiento(vista.getModelo().getValueAt(fila, 3).toString());
             vista.setTxtRolJuego(vista.getModelo().getValueAt(fila, 4).toString());
 
-
             String nombreEquipo = vista.getModelo().getValueAt(fila, 5).toString();
             vista.getCmbEquipos().setSelectedItem(nombreEquipo);
         }
@@ -157,4 +156,5 @@ public class JugadorControlador {
         }
         vista.getTblJugadores().clearSelection();
     }
-}
+}//sebstain omar
+
